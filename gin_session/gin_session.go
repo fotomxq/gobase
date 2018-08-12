@@ -38,10 +38,13 @@ func RefConfig(timeout string) error {
 func GetMark(c *gin.Context) (string,error){
 	token,err := GetCookie(c)
 	if err != nil || token == ""{
-		tokenStr := AppName + c.ClientIP() + filter.GetRandStr(95348671259875)
-		token,err = filter.GetSha1(tokenStr)
-		if err != nil{
-			return "",err
+		token = c.PostForm("cookie")
+		if token == ""{
+			tokenStr := AppName + c.ClientIP() + filter.GetRandStr(95348671259875)
+			token,err = filter.GetSha1(tokenStr)
+			if err != nil{
+				return "",err
+			}
 		}
 	}
 	SetCookie(c,token)
